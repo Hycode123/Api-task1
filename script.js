@@ -1,29 +1,52 @@
 const countriesContainer = document.getElementById("countries");
 const searchInput = document.getElementById("search");
+let allCountries = []; 
 
-searchInput.addEventListener("input", function(event){
-  const query = searchInput.value.trim();
 
+
+window.addEventListener("load", function () {
+  setTimeout(function () {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("content").style.display = "block";
+  }, 1000);
+});
+
+fetch("https://restcountries.com/v3.1/all")
+  .then(function (res) {
+    return res.json();
+  })
+  .then(function (data) {
+    allCountries = data.sort(function (a, b) {
+      return a.name.common.localeCompare(b.name.common);
+    });
+
+    displayCountries(allCountries);
+  })
+  .catch(function (error) {
+    countriesContainer.innerHTML = "<p>Failed to load countries.</p>";
+    console.error("Fetch error:", error);
+  });
+ 
+
+searchInput.addEventListener("input", function () {
+  const query = searchInput.value.trim().toLowerCase();
 
   if (!query) {
-    countriesContainer.innerHTML = "";
+    displayCountries(allCountries);
     return;
   }
 
-  fetch(`https://restcountries.com/v3.1/name/${query}`)
-    .then((res) =>  res.json())
-    .then((data) => {
-      displayCountries(data);
-    })
-    .catch((error) => {
-      countriesContainer.innerHTML = "<p>No country found.</p>";
-    });
+  const filtered = allCountries.filter(function (country) {
+    return country.name.common.toLowerCase().includes(query);
+  });
+
+  displayCountries(filtered);
 });
 
 function displayCountries(countries) {
   countriesContainer.innerHTML = "";
 
-  countries.forEach((country) => {
+  countries.forEach(function (country) {
     const card = document.createElement("div");
     card.className = "country-card";
 
@@ -37,3 +60,4 @@ function displayCountries(countries) {
     countriesContainer.appendChild(card);
   });
 }
+
