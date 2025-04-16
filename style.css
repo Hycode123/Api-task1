@@ -32,7 +32,7 @@
 }
   
   input[type="text"] {
-    width: 60%;
+    width: 100%;
     padding: 20px;
     font-size: 18px;
     margin-bottom: 20px;

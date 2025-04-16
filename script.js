@@ -1,8 +1,6 @@
 const countriesContainer = document.getElementById("countries");
 const searchInput = document.getElementById("search");
-let allCountries = []; 
-
-
+let allCountries = [];
 
 window.addEventListener("load", function () {
   setTimeout(function () {
@@ -26,20 +24,16 @@ fetch("https://restcountries.com/v3.1/all")
     countriesContainer.innerHTML = "<p>Failed to load countries.</p>";
     console.error("Fetch error:", error);
   });
- 
 
 searchInput.addEventListener("input", function () {
   const query = searchInput.value.trim().toLowerCase();
-
   if (!query) {
     displayCountries(allCountries);
     return;
   }
-
   const filtered = allCountries.filter(function (country) {
     return country.name.common.toLowerCase().includes(query);
   });
-
   displayCountries(filtered);
 });
 
@@ -53,11 +47,12 @@ function displayCountries(countries) {
     card.innerHTML = `
       <img src="${country.flags.svg}" alt="Flag of ${country.name.common}">
       <h3>${country.name.common}</h3>
-      <p><strong>Capital:</strong> ${country.capital ? country.capital[0] : "N/A"}</p>
+      <p><strong>Capital:</strong> ${
+        country.capital ? country.capital[0] : "N/A"
+      }</p>
       <p><strong>Population:</strong> ${country.population.toLocaleString()}</p>
     `;
 
     countriesContainer.appendChild(card);
   });
 }
-
